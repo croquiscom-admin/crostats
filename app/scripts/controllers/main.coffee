@@ -3,7 +3,14 @@ angular.module('statisticsApp')
     $http.get('/api/scripts').success (scripts) ->
       $scope.scripts = scripts
 
+    $scope.getClass = (id) ->
+      if $scope.selected is id
+        return 'active'
+      else
+        return ''
+
     $scope.showData = (id) ->
+      $scope.selected = id
       $http.get("/api/scripts/#{id}/results").success (results) ->
         columns = []
         results.forEach (result) ->

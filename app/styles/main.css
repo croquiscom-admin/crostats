@@ -2,4 +2,14 @@ body {
     background: #fafafa;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #333;
+	padding-top: 50px;
+}
+
+.result-table th {
+	border: 1px solid black;
+	padding: 3px;
+}
+.result-table td {
+	border: 1px solid black;
+	padding: 3px;
 }
