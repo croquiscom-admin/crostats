@@ -1,9 +1,19 @@
-<div class="hero-unit">
-  <h1>'Allo, 'Allo!</h1>
-  <p>You now have</p>
-  <ul>
-      <li ng-repeat="thing in awesomeThings">{{thing}}</li>
-  </ul>
-  <p>installed.</p>
-  <h3>Enjoy coding! - Yeoman</h3>
+<div class='row'>
+  <div class='col-md-4'>
+    <div class='list-group'>
+      <a class='list-group-item' ng-repeat='item in scripts' ng-click='showData(item._id)'>{{item._id}}</a>
+    </div>
+  </div>
+  <div class='col-md-8'>
+    <table border='1'>
+      <tr>
+        <th>Date</th>
+        <th ng-repeat='column in columns'>{{column}}</th>
+      </tr>
+      <tr ng-repeat='item in results'>
+        <td>{{item.date}}</td>
+        <td ng-repeat='value in item.result'>{{value}}</td>
+      </tr>
+    </table>
+  </div>
 </div>
