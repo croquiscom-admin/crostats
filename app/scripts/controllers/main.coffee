@@ -1,5 +1,16 @@
 angular.module('statisticsApp')
   .controller 'MainCtrl', ($scope, $http) ->
+    drawChart = (columns, results) ->
+      data = new google.visualization.DataTable()
+      data.addColumn 'date', 'Date'
+      columns.forEach (column) -> data.addColumn 'number', column
+      results.forEach (result) ->
+        row = [ new Date(result.date) ]
+        row.push.apply row, result.result
+        data.addRow row
+      chart = new google.visualization.LineChart(document.getElementById('chart'))
+      chart.draw data, width: 800, height: 400, pointSize: 3
+
     setResults = (results) ->
       columns = []
       results.forEach (result) ->
@@ -19,6 +30,8 @@ angular.module('statisticsApp')
           return value
       $scope.columns = columns
       $scope.results = results
+
+      drawChart columns, results
 
     $http.get('/api/scripts').success (scripts) ->
       $scope.scripts = scripts
