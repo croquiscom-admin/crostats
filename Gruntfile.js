@@ -331,6 +331,12 @@ module.exports = function (grunt) {
           server: path.resolve('./server/main')
         }
       }
+    },
+    forever: {
+      options: {
+        index: 'server/main.coffee',
+        command: './node_modules/.bin/coffee'
+      }
     }
   });
 
@@ -378,5 +384,14 @@ module.exports = function (grunt) {
     'jshint',
     'test',
     'build'
+  ]);
+
+  grunt.registerTask('start', [
+    'build',
+    'forever:start'
+  ]);
+
+  grunt.registerTask('stop', [
+    'forever:stop'
   ]);
 };
