@@ -28,6 +28,7 @@ angular.module('statisticsApp')
           pos = result.result.forEach (item) ->
             value = item.value if item._id is column
           return value
+        result.total = result.result.reduce ((previousValue, currentValue) -> previousValue + currentValue), 0
       $scope.columns = columns
       $scope.results = results
 

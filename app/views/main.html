@@ -18,10 +18,12 @@
           <tr>
             <th>Date</th>
             <th ng-repeat='column in columns'>{{column}}</th>
+            <th>Total</th>
           </tr>
           <tr ng-repeat='item in results'>
             <td>{{item.date}}</td>
             <td ng-repeat='value in item.result'>{{value}}</td>
+            <td>{{item.total}}</td>
           </tr>
         </table>
         <div id='chart'></div>
