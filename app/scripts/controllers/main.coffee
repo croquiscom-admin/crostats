@@ -23,11 +23,12 @@ angular.module('statisticsApp')
         else if a > b then 1
         else 0
       results.forEach (result) ->
-        result.result = columns.map (column) ->
+        result.result_for_table = columns.map (column) ->
           value = 'N/A'
           pos = result.result.forEach (item) ->
             value = item.value if item._id is column
           return value
+        result.result = result.result_for_table.map (value) -> if value is 'N/A' then 0 else value
         result.total = result.result.reduce ((previousValue, currentValue) -> previousValue + currentValue), 0
       $scope.columns = columns
       $scope.results = results
