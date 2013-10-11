@@ -3,7 +3,12 @@ runner = require '../runner'
 
 module.exports = (app) ->
   app.get '/api/scripts', (req, res) ->
-    models.scripts.find({}).toArray (error, result) ->
+    models.scripts.find({}, {_id:1}).toArray (error, result) ->
+      return res.send 400, error if error
+      res.json result
+
+  app.get '/api/scripts/:id', (req, res) ->
+    models.scripts.findOne _id: req.params.id, (error, result) ->
       return res.send 400, error if error
       res.json result
 

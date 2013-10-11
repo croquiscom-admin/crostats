@@ -1,5 +1,5 @@
 angular.module('statisticsApp')
-  .controller 'MainCtrl', ($scope, $http) ->
+  .controller 'ScriptsItemCtrl', ($scope, $http, $stateParams) ->
     drawChart = (columns, results) ->
       data = new google.visualization.DataTable()
       data.addColumn 'date', 'Date'
@@ -35,20 +35,13 @@ angular.module('statisticsApp')
 
       drawChart columns, results
 
-    $http.get('/api/scripts').success (scripts) ->
-      $scope.scripts = scripts
-
-    $scope.getClass = (id) ->
-      if $scope.selected and $scope.selected._id is id
-        return 'active'
-      else
-        return ''
-
-    $scope.showData = (script) ->
-      $scope.selected = script
-      $http.get("/api/scripts/#{script._id}/results").success (results) ->
-        setResults results
-
     $scope.runScript = (script) ->
-      $http.post("/api/scripts/#{script._id}/run").success (results) ->
+      $http.post("/api/scripts/#{script}/run").success (results) ->
         setResults results
+
+    $scope.$parent.selected = $stateParams.id
+    $http.get("/api/scripts/#{$stateParams.id}/results").success (results) ->
+      setResults results
+
+    $http.get("/api/scripts/#{$stateParams.id}").success (script) ->
+      $scope.script = script
