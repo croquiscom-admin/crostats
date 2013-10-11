@@ -8,6 +8,8 @@ if require.main is module
 
 require('./routes')(app)
 
+require('./runner').start()
+
 if require.main is module
   app.listen 7293
 else
