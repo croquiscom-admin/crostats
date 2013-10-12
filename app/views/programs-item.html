@@ -1,10 +1,10 @@
 <div ng-show='selected'>
   <form>
     <label>Map function</label>
-    <textarea class='form-control' rows='3'>{{script.map}}</textarea>
+    <textarea class='form-control' rows='3'>{{program.map}}</textarea>
     <label>Reduce function</label>
-    <textarea class='form-control' rows='3'>{{script.reduce}}</textarea>
-    <button type='submit' class='btn btn-default' ng-click='runScript(selected)'>Run</button>
+    <textarea class='form-control' rows='3'>{{program.reduce}}</textarea>
+    <button type='submit' class='btn btn-default' ng-click='runProgram(selected)'>Run</button>
   </form>
   <div ng-show='results'>
     <table class='result-table'>

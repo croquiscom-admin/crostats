@@ -1,15 +1,15 @@
 angular.module('statisticsApp', ['ui.router'])
   .config ($stateProvider, $urlRouterProvider) ->
-    $urlRouterProvider.otherwise '/scripts'
+    $urlRouterProvider.otherwise '/programs'
 
     $stateProvider
-      .state('scripts',
-        url: '/scripts'
-        templateUrl: 'views/scripts.html'
-        controller: 'ScriptsCtrl'
+      .state('programs',
+        url: '/programs'
+        templateUrl: 'views/programs.html'
+        controller: 'ProgramsCtrl'
       )
-      .state('scripts.item',
+      .state('programs.item',
         url: '/:id'
-        templateUrl: 'views/scripts-item.html'
-        controller: 'ScriptsItemCtrl'
+        templateUrl: 'views/programs-item.html'
+        controller: 'ProgramsItemCtrl'
       )

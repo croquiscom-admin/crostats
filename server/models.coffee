@@ -4,11 +4,11 @@ db = new mongodb.Db 'statistics', server, safe: true
 db.open ->
 
 servers = new mongodb.Collection db, 'servers'
-scripts = new mongodb.Collection db, 'scripts'
+programs = new mongodb.Collection db, 'programs'
 results = new mongodb.Collection db, 'results'
 
 module.exports =
   mongodb: mongodb
   servers: servers
-  scripts: scripts
+  programs: programs
   results: results

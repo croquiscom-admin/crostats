@@ -19,30 +19,30 @@ class Runner
           today.setMilliseconds(0)
           return true if last_run.getTime() < today.getTime()
       return false
-    models.scripts.find($where: where.toString(), {_id: 1}).toArray (error, scripts) =>
-      scripts.forEach (script) => @runAndUpdate script._id
+    models.programs.find($where: where.toString(), {_id: 1}).toArray (error, programs) =>
+      programs.forEach (program) => @runAndUpdate program._id
 
-  runAndUpdate: (script_id) ->
+  runAndUpdate: (program_id) ->
     date = new Date()
-    console.log "Run script '#{script_id}' at #{date.toString()}..."
-    models.scripts.update {_id: script_id}, {$set: 'runner.last_run': date}, safe: true, (error, count) =>
+    console.log "Run program '#{program_id}' at #{date.toString()}..."
+    models.programs.update {_id: program_id}, {$set: 'runner.last_run': date}, safe: true, (error, count) =>
       return if error
-      @run script_id, (error, results) ->
+      @run program_id, (error, results) ->
         return if error
-        models.results.insert { script: script_id, result: results, date: date }, safe: true, (error, result) ->
+        models.results.insert { program: program_id, result: results, date: date }, safe: true, (error, result) ->
 
-  run: (script_id, callback) ->
+  run: (program_id, callback) ->
     if not callback
       callback = ->
-    models.scripts.findOne _id: script_id, (error, script) ->
+    models.programs.findOne _id: program_id, (error, program) ->
       return callback error if error
-      models.servers.findOne _id: script.server, (error, server) ->
+      models.servers.findOne _id: program.server, (error, server) ->
         return callback error if error
         url = server.url
         url = "#{server.user}:#{server.password}@#{url}" if server.user and server.password
         models.mongodb.MongoClient.connect "mongodb://#{url}", (error, t_db) ->
           return callback error if error
-          t_db.collection(script.collection).mapReduce script.map, script.reduce, out: inline: 1, (error, results) ->
+          t_db.collection(program.collection).mapReduce program.map, program.reduce, out: inline: 1, (error, results) ->
             return callback error if error
             callback null, results
 
