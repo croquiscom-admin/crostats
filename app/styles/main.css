@@ -22,11 +22,22 @@ body {
 	padding-top: 70px;
 }
 
-.result-table th {
-	border: 1px solid black;
-	padding: 3px;
+.table-scrollable {
+    width: 100%;
+	height: 300px;
+	margin-bottom: 15px;
+    overflow: auto;
+    border: 1px solid #dddddd;
 }
-.result-table td {
-	border: 1px solid black;
-	padding: 3px;
+.table-scrollable > .table {
+	margin-bottom: 0;
+	background-color: #ffffff;
+}
+.table-scrollable > .table > thead > tr > th,
+.table-scrollable > .table > tbody > tr > th,
+.table-scrollable > .table > tfoot > tr > th,
+.table-scrollable > .table > thead > tr > td,
+.table-scrollable > .table > tbody > tr > td,
+.table-scrollable > .table > tfoot > tr > td {
+	white-space: nowrap;
 }
