@@ -12,6 +12,7 @@ angular.module('statisticsApp', ['ui.router'])
       .state('programs.list',
         url: ''
         templateUrl: 'views/programs-list.html'
+        controller: 'ProgramsListCtrl'
       )
       .state('programs.item',
         url: '/:id'

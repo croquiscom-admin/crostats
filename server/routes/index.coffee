@@ -3,7 +3,7 @@ runner = require '../runner'
 
 module.exports = (app) ->
   app.get '/api/programs', (req, res) ->
-    models.programs.find({}, {_id:1}).toArray (error, result) ->
+    models.programs.find({}, {_id:1, title: 1}).toArray (error, result) ->
       return res.send 400, error if error
       res.json result
 
