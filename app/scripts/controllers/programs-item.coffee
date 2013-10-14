@@ -44,4 +44,6 @@ angular.module('statisticsApp')
       setResults results
 
     $http.get("/api/programs/#{$stateParams.id}").success (program) ->
+      program.map = js_beautify program.map
+      program.reduce = js_beautify program.reduce
       $scope.program = program

@@ -9,6 +9,11 @@
       </ul>
     </li>
   </ul>
+  <div class='navbar-right'>
+    <div ng-show='selected'>
+      <button type='button' data-toggle='modal' data-target='#program-edit-dialog'><span class='glyphicon glyphicon-pencil'></span>
+    </div>
+  </div>
 </nav>
 
 <div class='content-padding-for-navbar' ui-view=''>

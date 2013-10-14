@@ -41,3 +41,8 @@ body {
 .table-scrollable > .table > tfoot > tr > td {
 	white-space: nowrap;
 }
+
+#program-edit-dialog > .modal-dialog {
+	width: auto;
+	padding: 10px;
+}
