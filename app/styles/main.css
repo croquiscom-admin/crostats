@@ -2,7 +2,24 @@ body {
     background: #fafafa;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #333;
-	padding-top: 50px;
+	overflow: hidden;
+}
+
+.scroller {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	overflow: auto;
+}
+
+.container {
+	max-width: none;
+}
+
+.content-padding-for-navbar {
+	padding-top: 70px;
 }
 
 .result-table th {
