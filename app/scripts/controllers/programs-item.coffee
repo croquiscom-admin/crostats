@@ -35,8 +35,8 @@ angular.module('statisticsApp')
 
       drawChart columns, results
 
-    $scope.runProgram = (program) ->
-      $http.post("/api/programs/#{program}/run").success (results) ->
+    $scope.runProgram = ->
+      $http.post("/api/runProgram", $scope.program).success (results) ->
         $scope.run_result = results[0].result
 
     $scope.$parent.selected = $stateParams.id

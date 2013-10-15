@@ -37,18 +37,21 @@ class Runner
         models.results.insert { program: program_id, result: results, date: date }, safe: true, (error, result) ->
 
   run: (program_id, callback) ->
-    if not callback
-      callback = ->
     models.programs.findOne _id: program_id, (error, program) =>
       return callback error if error
-      models.servers.findOne _id: program.server, (error, server) =>
-        return callback error if error
-        if program.script
-          @runScript server, program, callback
-        else if program.map and program.reduce and program.collection
-          @runMapReduce server, program, callback
-        else
-          callback 'No program'
+      @runProgram program, callback
+
+  runProgram: (program, callback) ->
+    if not callback
+      callback = ->
+    models.servers.findOne _id: program.server, (error, server) =>
+      return callback error if error
+      if program.script
+        @runScript server, program, callback
+      else if program.map and program.reduce and program.collection
+        @runMapReduce server, program, callback
+      else
+        callback 'No program'
 
   runScript: (server, program, callback) ->
     temp.open 'mongoscript', (error, info) ->

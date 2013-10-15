@@ -22,5 +22,10 @@ module.exports = (app) ->
       return res.send 400, error if error
       res.json [date: new Date(), result: results]
 
+  app.post '/api/runProgram', (req, res) ->
+    runner.runProgram req.body, (error, results) ->
+      return res.send 400, error if error
+      res.json [date: new Date(), result: results]
+
   app.use (req, res) ->
     res.json 404, ok: false
