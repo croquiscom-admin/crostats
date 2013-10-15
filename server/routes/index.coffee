@@ -2,6 +2,11 @@ models = require '../models'
 runner = require '../runner'
 
 module.exports = (app) ->
+  app.get '/api/servers', (req, res) ->
+    models.servers.find({}, {_id:1}).toArray (error, result) ->
+      return res.send 400, error if error
+      res.json result
+
   app.get '/api/programs', (req, res) ->
     models.programs.find({}, {_id:1, title: 1}).toArray (error, result) ->
       return res.send 400, error if error

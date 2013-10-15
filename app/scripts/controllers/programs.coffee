@@ -1,5 +1,8 @@
 angular.module('statisticsApp')
   .controller 'ProgramsCtrl', ($scope, $http) ->
+    $http.get('/api/servers').success (servers) ->
+      $scope.servers = servers
+
     $http.get('/api/programs').success (programs) ->
       programs.forEach (program) ->
         program.title ||= program._id
