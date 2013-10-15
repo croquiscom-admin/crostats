@@ -1,3 +1,8 @@
+{exec} = require 'child_process'
+fs = require 'fs'
+temp = require 'temp'
+temp.track()
+
 models = require './models'
 
 class Runner
@@ -34,16 +39,43 @@ class Runner
   run: (program_id, callback) ->
     if not callback
       callback = ->
-    models.programs.findOne _id: program_id, (error, program) ->
+    models.programs.findOne _id: program_id, (error, program) =>
       return callback error if error
-      models.servers.findOne _id: program.server, (error, server) ->
+      models.servers.findOne _id: program.server, (error, server) =>
         return callback error if error
-        url = server.url
-        url = "#{server.user}:#{server.password}@#{url}" if server.user and server.password
-        models.mongodb.MongoClient.connect "mongodb://#{url}", (error, t_db) ->
-          return callback error if error
-          t_db.collection(program.collection).mapReduce program.map, program.reduce, out: inline: 1, (error, results) ->
-            return callback error if error
-            callback null, results
+        if program.script
+          @runScript server, program, callback
+        else if program.map and program.reduce and program.collection
+          @runMapReduce server, program, callback
+        else
+          callback 'No program'
+
+  runScript: (server, program, callback) ->
+    temp.open 'mongoscript', (error, info) ->
+      return callback error if error
+
+      fs.write info.fd, program.script
+      fs.close info.fd, (error) ->
+        return callback error if error
+
+        cmd = 'mongo --quiet '
+        if server.user and server.password
+          cmd += "-u #{server.user} -p #{server.password} "
+        cmd += server.url
+        cmd += ' ' + info.path
+
+        exec cmd, (error, stdout, stderr) ->
+          result = stdout.toString()
+          return callback result if error
+          callback null, JSON.parse result
+
+  runMapReduce: (server, program, callback) ->
+    url = server.url
+    url = "#{server.user}:#{server.password}@#{url}" if server.user and server.password
+    models.mongodb.MongoClient.connect "mongodb://#{url}", (error, db) ->
+      return callback error if error
+      db.collection(program.collection).mapReduce program.map, program.reduce, out: inline: 1, (error, results) ->
+        return callback error if error
+        callback null, results
 
 module.exports = new Runner()
