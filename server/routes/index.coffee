@@ -12,6 +12,12 @@ module.exports = (app) ->
       return res.send 400, error if error
       res.json result
 
+  app.post '/api/programs', (req, res) ->
+    id = req.body.id
+    models.programs.insert _id: id, title: id, description: id, type: 'mapreduce', (error) ->
+      return res.send 400, error if error
+      res.json {}
+
   app.get '/api/programs/:id', (req, res) ->
     models.programs.findOne _id: req.params.id, (error, result) ->
       return res.send 400, error if error

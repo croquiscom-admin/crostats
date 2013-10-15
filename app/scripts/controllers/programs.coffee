@@ -15,3 +15,9 @@ angular.module('statisticsApp')
       $scope.programs.forEach (program) ->
         title = program.title if program._id is program_id
       return title
+
+    $scope.addProgram = ->
+      id = prompt "Input program's id to add"
+      if id
+        $http.post('/api/programs', id: id).success ->
+          $scope.programs.push _id: id, title: id, description: id
