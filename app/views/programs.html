@@ -1,9 +1,9 @@
 <nav class='navbar navbar-default navbar-fixed-top'>
   <ul class='nav navbar-nav'>
     <li class='dropdown'>
-      <a class='dropdown-toggle' data-toggle="dropdown" href="#">{{getTitleOfProgram(selected) || 'Select program'}} <b class='caret'></b></a>
+      <a class='dropdown-toggle' data-toggle="dropdown" href="#">{{getTitleOfProgram(selected) || ('programs.list.select_one' | i18next)}} <b class='caret'></b></a>
       <ul class='dropdown-menu'>
-        <li><a ui-sref='programs.list'>Return to list</a></li>
+        <li><a ui-sref='programs.list' ng-i18next='programs.list.return_to_list'></a></li>
         <li class='divider'></li>
         <li ng-repeat='item in programs' ng-class="{active: selected==item._id}"><a ui-sref='programs.item({id:item._id})'>{{item.title}}</a></li>
       </ul>

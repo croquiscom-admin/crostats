@@ -1,0 +1,17 @@
+{
+  "programs": {
+    "list": {
+      "select_one": "프로그램 선택",
+      "return_to_list": "목록으로 돌아가기"
+    },
+    "result": {
+      "date": "날짜",
+      "total": "합계",
+      "no_result": "결과 없음"
+    },
+    "edit": {
+      "result": "결과",
+      "test": "테스트"
+    }
+  }
+}

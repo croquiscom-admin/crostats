@@ -1,6 +1,9 @@
-angular.module('statisticsApp', ['ui.router'])
-  .config ($stateProvider, $urlRouterProvider) ->
+angular.module('statisticsApp', ['ui.router', 'jm.i18next'])
+  .config ($stateProvider, $urlRouterProvider, $i18nextProvider) ->
     $urlRouterProvider.otherwise '/programs'
+
+    $i18nextProvider.options =
+      fallbackLng: 'en'
 
     $stateProvider
       .state('programs',

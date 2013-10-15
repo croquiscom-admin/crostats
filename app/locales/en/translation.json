@@ -1,0 +1,17 @@
+{
+  "programs": {
+    "list": {
+      "select_one": "Select program",
+      "return_to_list": "Return to list"
+    },
+    "result": {
+      "date": "Date",
+      "total": "Total",
+      "no_result": "No results"
+    },
+    "edit": {
+      "result": "Result",
+      "test": "Test"
+    }
+  }
+}
