@@ -46,12 +46,13 @@ class Runner
       callback = ->
     models.servers.findOne _id: program.server, (error, server) =>
       return callback error if error
-      if program.script
-        @runScript server, program, callback
-      else if program.map and program.reduce and program.collection
-        @runMapReduce server, program, callback
-      else
-        callback 'No program'
+      switch program.type
+        when 'shellscript'
+          @runScript server, program, callback
+        when 'mapreduce'
+          @runMapReduce server, program, callback
+        else
+          callback 'No program'
 
   runScript: (server, program, callback) ->
     temp.open 'mongoscript', (error, info) ->

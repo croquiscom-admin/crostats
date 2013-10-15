@@ -1,5 +1,9 @@
 angular.module('statisticsApp')
   .controller 'ProgramsItemCtrl', ($scope, $http, $stateParams) ->
+    $scope.types =
+      shellscript: 'MongoDB shell script'
+      mapreduce: 'Map-Reduce'
+
     drawChart = (columns, results) ->
       data = new google.visualization.DataTable()
       data.addColumn 'date', 'Date'

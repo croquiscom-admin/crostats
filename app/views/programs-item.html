@@ -27,16 +27,21 @@
       </div>
       <div class='modal-body'>
         <form>
-          <div ng-show='program.script'>
-            <label>Script</label>
-            <textarea class='form-control' rows='8' ng-model='program.script'></textarea>
-          </div>
-          <div ng-show='program.map'>
-            <label>Map function</label>
-            <textarea class='form-control' rows='8' ng-model='program.map'></textarea>
-            <label>Reduce function</label>
-            <textarea class='form-control' rows='8' ng-model='program.reduce'></textarea>
-          </div>
+          <select ng-model='program.type' ng-options='type as label for (type, label) in types'></select>
+          <ng-switch on='program.type'>
+            <div ng-switch-when='shellscript'>
+              <label>Script</label>
+              <textarea class='form-control' rows='8' ng-model='program.script'></textarea>
+            </div>
+            <div ng-switch-when='mapreduce'>
+              <label>Collection</label>
+              <input type='text' class='form-control' ng-model='program.collection'></textarea>
+              <label>Map function</label>
+              <textarea class='form-control' rows='8' ng-model='program.map'></textarea>
+              <label>Reduce function</label>
+              <textarea class='form-control' rows='8' ng-model='program.reduce'></textarea>
+            </div>
+          </ng-switch>
           <button type='submit' class='btn btn-default' ng-click='runProgram()' ng-i18next='programs.edit.test'></button>
           <div ng-show='run_result'>
             <label ng-i18next='programs.edit.result'></label>
