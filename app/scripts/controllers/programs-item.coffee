@@ -43,6 +43,9 @@ angular.module('statisticsApp')
       $http.post("/api/runProgram", $scope.program).success (results) ->
         $scope.run_result = results[0].result
 
+    $scope.updateProgram = ->
+      $http.put("/api/programs/#{$stateParams.id}", $scope.program).success ->
+
     $scope.$parent.selected = $stateParams.id
     $http.get("/api/programs/#{$stateParams.id}/results").success (results) ->
       setResults results

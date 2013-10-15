@@ -17,6 +17,12 @@ module.exports = (app) ->
       return res.send 400, error if error
       res.json result
 
+  app.put '/api/programs/:id', (req, res) ->
+    delete req.body._id
+    models.programs.update { _id: req.params.id }, { $set: req.body }, safe: true, (error) ->
+      return res.send 400, error if error
+      res.json {}
+
   app.get '/api/programs/:id/results', (req, res) ->
     models.results.find(program: req.params.id).toArray (error, result) ->
       return res.send 400, error if error
