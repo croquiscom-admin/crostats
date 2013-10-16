@@ -2,7 +2,9 @@
   "programs": {
     "list": {
       "select_one": "프로그램 선택",
-      "return_to_list": "목록으로 돌아가기"
+      "return_to_list": "목록으로 돌아가기",
+      "input_program_id": "추가할 프로그램 ID를 입력하세요",
+      "delete_program_confirm": "정말 이 프로그램을 삭제하시겠습니까?"
     },
     "result": {
       "date": "날짜",

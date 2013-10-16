@@ -1,5 +1,5 @@
 angular.module('statisticsApp')
-  .controller 'ProgramsCtrl', ($scope, $http) ->
+  .controller 'ProgramsCtrl', ($scope, $http, $state) ->
     $http.get('/api/servers').success (servers) ->
       $scope.servers = servers
 
@@ -17,7 +17,14 @@ angular.module('statisticsApp')
       return title
 
     $scope.addProgram = ->
-      id = prompt "Input program's id to add"
+      id = prompt $.t 'programs.list.input_program_id'
       if id
         $http.post('/api/programs', id: id).success ->
           $scope.programs.push _id: id, title: id, description: id
+
+    $scope.deleteProgram = ->
+      if confirm $.t 'programs.list.delete_program_confirm'
+        selected = $scope.selected
+        $http.delete("/api/programs/#{selected}").success ->
+          $state.go 'programs.list'
+          $scope.programs = $scope.programs.filter (program) -> program._id isnt selected
