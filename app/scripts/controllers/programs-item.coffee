@@ -1,4 +1,4 @@
-angular.module('statisticsApp')
+angular.module('CroStats')
   .controller 'ProgramsItemCtrl', ($scope, $http, $stateParams) ->
     $scope.types =
       shellscript: 'MongoDB shell script'

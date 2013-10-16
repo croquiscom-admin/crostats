@@ -1,13 +1,13 @@
-angular.module('statisticsApp')
-  .controller 'ProgramsCtrl', ($scope, $http, $state) ->
+angular.module('CroStats')
+  .controller 'ProgramsCtrl', ($scope, $http, $state, Restangular) ->
+    programs = Restangular.all('programs')
+
+    $scope.programs = []
+    programs.getList().then (programs) ->
+      $scope.programs = programs
+
     $http.get('/api/servers').success (servers) ->
       $scope.servers = servers
-
-    $http.get('/api/programs').success (programs) ->
-      programs.forEach (program) ->
-        program.title ||= program._id
-        program.description ||= program.title
-      $scope.programs = programs
 
     $scope.getTitleOfProgram = (program_id) ->
       return if not $scope.programs or not program_id
@@ -19,12 +19,13 @@ angular.module('statisticsApp')
     $scope.addProgram = ->
       id = prompt $.t 'programs.list.input_program_id'
       if id
-        $http.post('/api/programs', id: id).success ->
-          $scope.programs.push _id: id, title: id, description: id
+        new_program = _id: id, title: id, description: id
+        programs.post(new_program).then ->
+          $scope.programs.push new_program
 
     $scope.deleteProgram = ->
-      if confirm $.t 'programs.list.delete_program_confirm'
-        selected = $scope.selected
-        $http.delete("/api/programs/#{selected}").success ->
+      if $scope.selected and confirm $.t 'programs.list.delete_program_confirm'
+        program_to_delete = _.find $scope.programs, (program) -> program._id is $scope.selected
+        program_to_delete.remove().then ->
           $state.go 'programs.list'
-          $scope.programs = $scope.programs.filter (program) -> program._id isnt selected
+          $scope.programs = _.without $scope.programs, program_to_delete

@@ -8,13 +8,15 @@ module.exports = (app) ->
       res.json result
 
   app.get '/api/programs', (req, res) ->
-    models.programs.find({}, {_id:1, title: 1}).toArray (error, result) ->
+    models.programs.find({}, {_id:1, title: 1, description: 1}).toArray (error, result) ->
       return res.send 400, error if error
       res.json result
 
   app.post '/api/programs', (req, res) ->
-    id = req.body.id
-    models.programs.insert _id: id, title: id, description: id, type: 'mapreduce', (error) ->
+    id = req.body.id or req.body._id
+    title = req.body.title or id
+    description = req.body.description or id
+    models.programs.insert _id: id, title: title, description: description, type: 'mapreduce', (error) ->
       return res.send 400, error if error
       res.json {}
 
