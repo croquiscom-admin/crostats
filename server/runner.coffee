@@ -25,6 +25,7 @@ class Runner
           return true if last_run.getTime() < today.getTime()
       return false
     models.programs.find($where: where.toString(), {_id: 1}).toArray (error, programs) =>
+      return console.log 'Error while Runner.find : ' + error if error
       programs.forEach (program) => @runAndUpdate program._id
 
   runAndUpdate: (program_id) ->
@@ -71,7 +72,8 @@ class Runner
         exec cmd, (error, stdout, stderr) ->
           result = stdout.toString()
           return callback result if error
-          callback null, JSON.parse result
+          try result = JSON.parse result
+          callback null, result
 
   runMapReduce: (server, program, callback) ->
     url = server.url
