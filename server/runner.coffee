@@ -82,7 +82,7 @@ class Runner
     models.mongodb.MongoClient.connect "mongodb://#{url}", (error, db) ->
       return callback error if error
       db.collection(program.collection).mapReduce program.map, program.reduce, out: inline: 1, (error, results) ->
-        return callback error if error
+        return callback error.errmsg if error
         callback null, results
 
 module.exports = new Runner()
