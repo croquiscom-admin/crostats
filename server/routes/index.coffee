@@ -27,6 +27,11 @@ module.exports = (app) ->
 
   app.put '/api/programs/:id', (req, res) ->
     delete req.body._id
+
+    # reset last_run not to run this program when type is changed from none to daily
+    req.body.runner ||= {}
+    req.body.runner.last_run = new Date()
+
     models.programs.update { _id: req.params.id }, { $set: req.body }, safe: true, (error) ->
       return res.send 400, error if error
       res.json {}
