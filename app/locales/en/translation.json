@@ -14,7 +14,8 @@
     "edit": {
       "result": "Result",
       "test": "Test",
-      "save": "Save"
+      "save": "Save",
+      "reset": "Reset"
     }
   }
 }

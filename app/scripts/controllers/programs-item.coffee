@@ -45,6 +45,18 @@ angular.module('CroStats')
 
     $scope.updateProgram = ->
       $http.put("/api/programs/#{$stateParams.id}", $scope.program).success ->
+        $scope.original = angular.copy $scope.program
+
+        $scope.$parent.programs.forEach (program) ->
+          if program._id is $scope.program._id
+            program.title = $scope.program.title
+            program.description = $scope.program.description
+
+    $scope.resetProgram = ->
+      $scope.program = angular.copy $scope.original
+
+    $scope.isClean = ->
+      angular.equals $scope.program, $scope.original
 
     $scope.$parent.selected = $stateParams.id
     $http.get("/api/programs/#{$stateParams.id}/results").success (results) ->
@@ -55,3 +67,4 @@ angular.module('CroStats')
       program.map = js_beautify program.map if program.map
       program.reduce = js_beautify program.reduce if program.reduce
       $scope.program = program
+      $scope.original = angular.copy program

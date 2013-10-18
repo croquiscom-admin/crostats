@@ -46,3 +46,11 @@ body {
 	width: auto;
 	padding: 10px;
 }
+
+#program-edit-save {
+	margin-right: 10px;
+}
+
+#program-edit-reset {
+	margin-right: 10px;
+}
