@@ -47,6 +47,7 @@ class Runner
       callback = ->
     models.servers.findOne _id: program.server, (error, server) =>
       return callback error if error
+      return callback 'no server' if not server
       switch program.type
         when 'shellscript'
           @runScript server, program, callback

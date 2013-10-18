@@ -14,6 +14,7 @@
     "edit": {
       "result": "Result",
       "test": "Test",
+      "record_test_result": "Save test result",
       "save": "Save",
       "reset": "Reset"
     }

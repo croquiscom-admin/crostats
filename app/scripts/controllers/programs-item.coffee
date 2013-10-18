@@ -39,9 +39,17 @@ angular.module('CroStats')
 
       drawChart columns, results
 
+    loadResults = ->
+      $http.get("/api/programs/#{$stateParams.id}/results").success (results) ->
+        setResults results
+
     $scope.runProgram = ->
       $http.post("/api/runProgram", $scope.program).success (results) ->
-        $scope.run_result = results[0].result
+        $scope.show_run_result = true
+        $scope.run_result = results[0]
+      .error (data) ->
+        $scope.show_run_result = false
+        alert data
 
     $scope.updateProgram = ->
       $http.put("/api/programs/#{$stateParams.id}", $scope.program).success ->
@@ -58,9 +66,12 @@ angular.module('CroStats')
     $scope.isClean = ->
       angular.equals $scope.program, $scope.original
 
+    $scope.recordTestResult = ->
+      $http.post("/api/programs/#{$stateParams.id}/results", $scope.run_result).success ->
+        loadResults()
+
     $scope.$parent.selected = $stateParams.id
-    $http.get("/api/programs/#{$stateParams.id}/results").success (results) ->
-      setResults results
+    loadResults()
 
     $http.get("/api/programs/#{$stateParams.id}").success (program) ->
       program.script = js_beautify program.script if program.script

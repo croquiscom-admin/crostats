@@ -14,6 +14,7 @@
     "edit": {
       "result": "결과",
       "test": "테스트",
+      "record_test_result": "테스트 결과 저장",
       "save": "저장",
       "reset": "되돌리기"
     }

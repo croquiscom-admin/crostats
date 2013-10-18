@@ -48,6 +48,15 @@ module.exports = (app) ->
       return res.send 400, error if error
       res.json result
 
+  app.post '/api/programs/:id/results', (req, res) ->
+    data =
+      program: req.params.id
+      result: req.body.result
+      date: new Date(req.body.date)
+    models.results.insert data, safe: true, (error, result) ->
+      return res.send 400, error if error
+      res.json {}
+
   app.post '/api/programs/:id/run', (req, res) ->
     runner.run req.params.id, (error, results) ->
       return res.send 400, error if error
