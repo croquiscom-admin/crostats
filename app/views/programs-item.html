@@ -4,12 +4,12 @@
     <table class='table table-bordered table-condensed'>
       <tr>
         <th ng-i18next='programs.result.date'></th>
-        <th ng-repeat='column in columns'>{{column}}</th>
+        <th ng-repeat='column in columns track by $index'>{{column}}</th>
         <th ng-show='program.show_total' ng-i18next='programs.result.total'></th>
       </tr>
       <tr ng-repeat='item in results'>
         <td>{{item.date}}</td>
-        <td ng-repeat='value in item.result_for_table'>{{value}}</td>
+        <td ng-repeat='value in item.result_for_table track by $index'>{{value}}</td>
         <td ng-show='program.show_total'>{{item.total}}</td>
       </tr>
     </table>
