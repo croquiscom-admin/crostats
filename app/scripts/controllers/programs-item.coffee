@@ -73,9 +73,13 @@ angular.module('CroStats')
     $scope.$parent.selected = $stateParams.id
     loadResults()
 
+    $scope.beautifyScript = ->
+      $scope.program.script = js_beautify $scope.program.script if $scope.program.script
+    $scope.beautifyMap = ->
+      $scope.program.map = js_beautify $scope.program.map if $scope.program.map
+    $scope.beautifyReduce = ->
+      $scope.program.reduce = js_beautify $scope.program.reduce if $scope.program.reduce
+
     $http.get("/api/programs/#{$stateParams.id}").success (program) ->
-      program.script = js_beautify program.script if program.script
-      program.map = js_beautify program.map if program.map
-      program.reduce = js_beautify program.reduce if program.reduce
       $scope.program = program
       $scope.original = angular.copy program

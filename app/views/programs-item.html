@@ -57,15 +57,24 @@
           <ng-switch on='program.type'>
             <div class='form-group' ng-switch-when='shellscript'>
               <label>Script</label>
-              <textarea class='form-control' rows='8' ng-model='program.script'></textarea>
+              <div class='program-beautify-script-container'>
+                <textarea class='form-control' rows='8' ng-model='program.script'></textarea>
+                <button ng-click='beautifyScript()' class='btn btn-warning program-beautify-script'>Beautify</button>
+              </div>
             </div>
             <div class='form-group' ng-switch-when='mapreduce'>
               <label>Collection</label>
               <input type='text' class='form-control' ng-model='program.collection'></textarea>
               <label>Map function</label>
-              <textarea class='form-control' rows='8' ng-model='program.map'></textarea>
+              <div class='program-beautify-script-container'>
+                <textarea class='form-control' rows='8' ng-model='program.map'></textarea>
+                <button ng-click='beautifyMap()' class='btn btn-warning program-beautify-script'>Beautify</button>
+              </div>
               <label>Reduce function</label>
-              <textarea class='form-control' rows='8' ng-model='program.reduce'></textarea>
+              <div class='program-beautify-script-container'>
+                <textarea class='form-control' rows='8' ng-model='program.reduce'></textarea>
+                <button ng-click='beautifyReduce()' class='btn btn-warning program-beautify-script'>Beautify</button>
+              </div>
             </div>
           </ng-switch>
           <button type='submit' class='btn btn-default' ng-click='runProgram()' ng-i18next='programs.edit.test'></button>

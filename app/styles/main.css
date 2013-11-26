@@ -54,3 +54,13 @@ body {
 #program-edit-reset {
 	margin-right: 10px;
 }
+
+.program-beautify-script-container {
+	position: relative;
+}
+
+.program-beautify-script {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
