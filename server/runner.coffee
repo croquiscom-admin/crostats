@@ -1,3 +1,4 @@
+coffee = require 'coffee-script'
 {exec} = require 'child_process'
 fs = require 'fs'
 temp = require 'temp'
@@ -60,7 +61,11 @@ class Runner
     temp.open 'mongoscript', (error, info) ->
       return callback error if error
 
-      fs.write info.fd, program.script
+      script = program.script
+      if program.using_coffeescript
+        script = coffee.compile script, filename: 'crostats', bare: true
+
+      fs.write info.fd, script
       fs.close info.fd, (error) ->
         return callback error if error
 
@@ -77,11 +82,19 @@ class Runner
           callback null, result
 
   runMapReduce: (server, program, callback) ->
+    map = program.map
+    reduce = program.reduce
+    if program.using_coffeescript
+      map = coffee.compile map, filename: 'crostats', bare: true
+      map = map.replace /^\(((.|[\r\n])*)\);\n?$/, '$1'
+      reduce = coffee.compile reduce, filename: 'crostats', bare: true
+      reduce = reduce.replace /^\(((.|[\r\n])*)\);\n?$/, '$1'
+
     url = server.url
     url = "#{server.user}:#{server.password}@#{url}" if server.user and server.password
     models.mongodb.MongoClient.connect "mongodb://#{url}", (error, db) ->
       return callback error if error
-      db.collection(program.collection).mapReduce program.map, program.reduce, out: inline: 1, (error, results) ->
+      db.collection(program.collection).mapReduce map, reduce, out: inline: 1, (error, results) ->
         return callback error.errmsg if error
         callback null, results
 

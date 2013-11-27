@@ -54,12 +54,16 @@
               <option value='daily'>Daily</option>
             </select>
           </div>
+          <div class='form-group'>
+            <label>Using CoffeeScript</label>
+            <input type='checkbox' class='form-control' ng-model='program.using_coffeescript' ng-change='onChangeUsingCoffeeScript()'></textarea>
+          </div>
           <ng-switch on='program.type'>
             <div class='form-group' ng-switch-when='shellscript'>
               <label>Script</label>
               <div class='program-beautify-script-container'>
                 <textarea class='form-control' rows='8' ng-model='program.script'></textarea>
-                <button ng-click='beautifyScript()' class='btn btn-warning program-beautify-script'>Beautify</button>
+                <button ng-click='beautifyScript()' class='btn btn-warning program-beautify-script' ng-hide='program.using_coffeescript'>Beautify</button>
               </div>
             </div>
             <div class='form-group' ng-switch-when='mapreduce'>
@@ -68,12 +72,12 @@
               <label>Map function</label>
               <div class='program-beautify-script-container'>
                 <textarea class='form-control' rows='8' ng-model='program.map'></textarea>
-                <button ng-click='beautifyMap()' class='btn btn-warning program-beautify-script'>Beautify</button>
+                <button ng-click='beautifyMap()' class='btn btn-warning program-beautify-script' ng-hide='program.using_coffeescript'>Beautify</button>
               </div>
               <label>Reduce function</label>
               <div class='program-beautify-script-container'>
                 <textarea class='form-control' rows='8' ng-model='program.reduce'></textarea>
-                <button ng-click='beautifyReduce()' class='btn btn-warning program-beautify-script'>Beautify</button>
+                <button ng-click='beautifyReduce()' class='btn btn-warning program-beautify-script' ng-hide='program.using_coffeescript'>Beautify</button>
               </div>
             </div>
           </ng-switch>

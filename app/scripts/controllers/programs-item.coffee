@@ -83,3 +83,8 @@ angular.module('CroStats')
     $http.get("/api/programs/#{$stateParams.id}").success (program) ->
       $scope.program = program
       $scope.original = angular.copy program
+
+    $scope.onChangeUsingCoffeeScript = ->
+      $scope.program.script = ''
+      $scope.program.map = ''
+      $scope.program.reduce = ''
