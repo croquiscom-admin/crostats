@@ -10,6 +10,7 @@ angular.module('CroStats')
       $scope.servers = servers
 
     $scope.getTitleOfProgram = (program_id) ->
+      return $.t 'programs.list.oneoff' if $scope.is_oneoff
       return if not $scope.programs or not program_id
       title = 'Unknown'
       $scope.programs.forEach (program) ->

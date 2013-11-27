@@ -20,6 +20,11 @@ angular.module('CroStats', ['ui.router', 'jm.i18next', 'restangular'])
         templateUrl: 'views/programs-list.html'
         controller: 'ProgramsListCtrl'
       )
+      .state('programs.oneoff',
+        url: '/oneoff'
+        templateUrl: 'views/programs-oneoff.html'
+        controller: 'ProgramsOneoffCtrl'
+      )
       .state('programs.item',
         url: '/:id'
         templateUrl: 'views/programs-item.html'
