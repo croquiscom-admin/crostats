@@ -1,0 +1,9 @@
+angular.module('CroStats')
+  .controller 'OneoffsHistoryCtrl', ($scope, Restangular) ->
+    oneoffs = Restangular.all('oneoffs')
+
+    $scope.oneoffs = []
+    oneoffs.getList().then (oneoffs) ->
+      $scope.oneoffs = oneoffs
+
+    $scope.$parent.selected = 'history'

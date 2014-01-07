@@ -14,7 +14,7 @@ angular.module('CroStats')
         $scope.show_run_result = false
         alert data
 
-    $scope.$parent.is_oneoff = true
-
     $scope.save = ->
       $http.post("/api/oneoffs", $scope.program).success ->
+
+    $scope.$parent.selected = 'new'

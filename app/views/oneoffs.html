@@ -3,9 +3,10 @@
     <li class='dropdown'>
       <a class='dropdown-toggle' data-toggle='dropdown' href='javascript:;'>{{'programs.list.select_one' | i18next}} <b class='caret'></b></a>
       <ul class='dropdown-menu'>
-        <li><a ui-sref='programs.list' ng-i18next='programs.list.return_to_list'></a></li>
+        <li><a ui-sref='programs.list' ng-i18next='programs.menu'></a></li>
         <li class='divider'></li>
-        <li ng-class="{active: is_oneoff}"><a ui-sref='oneoffs.new' ng-i18next='programs.list.oneoff'></a></li>
+        <li ng-class="{active: selected=='new'}"><a ui-sref='oneoffs.new' ng-i18next='oneoffs.new'></a></li>
+        <li ng-class="{active: selected=='history'}"><a ui-sref='oneoffs.history' ng-i18next='oneoffs.history'></a></li>
       </ul>
     </li>
   </ul>

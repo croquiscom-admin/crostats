@@ -1,9 +1,9 @@
 {
   "programs": {
+    "menu": "Programs",
     "list": {
       "select_one": "Select program",
       "return_to_list": "Return to list",
-      "oneoff": "One-off scripts",
       "input_program_id": "Input program's id to add",
       "delete_program_confirm": "Do you really want to delete this program?"
     },
@@ -19,5 +19,10 @@
       "save": "Save",
       "reset": "Reset"
     }
+  },
+  "oneoffs": {
+    "menu": "One-off scripts",
+    "new": "New one-off script",
+    "history": "One-off scripts history"
   }
 }
