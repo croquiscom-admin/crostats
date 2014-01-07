@@ -67,5 +67,20 @@ module.exports = (app) ->
       return res.send 400, error if error
       res.json [date: new Date(), result: results]
 
+  app.get '/api/oneoffs', (req, res) ->
+    models.oneoffs.find({}, {_id:1, description: 1}).sort(_id:-1).toArray (error, result) ->
+      return res.send 400, error if error
+      res.json result
+
+  app.post '/api/oneoffs', (req, res) ->
+    models.oneoffs.insert req.body, (error) ->
+      return res.send 400, error if error
+      res.json {}
+
+  app.get '/api/oneoffs/:id', (req, res) ->
+    models.oneoffs.findOne _id: req.params.id, (error, result) ->
+      return res.send 400, error if error
+      res.json result
+
   app.use (req, res) ->
     res.json 404, ok: false
