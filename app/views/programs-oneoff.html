@@ -23,6 +23,9 @@
     </div>
   </div>
   <button type='submit' class='btn btn-default' ng-click='runProgram()' ng-i18next='programs.edit.test'></button>
+  <div class='progress progress-striped active' ng-show='show_progress'>
+    <div class='progress-bar' style='width: 100%;'></div>
+  </div>
   <div ng-show='show_run_result'>
     <label ng-i18next='programs.edit.result'></label>
     <textarea class='form-control' rows='8' readonly>{{run_result.result}}</textarea>
