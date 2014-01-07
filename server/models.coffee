@@ -14,3 +14,4 @@ module.exports =
   programs: programs
   results: results
   oneoffs: oneoffs
+  ObjectID: mongodb.ObjectID

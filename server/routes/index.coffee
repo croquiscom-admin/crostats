@@ -78,7 +78,7 @@ module.exports = (app) ->
       res.json {}
 
   app.get '/api/oneoffs/:id', (req, res) ->
-    models.oneoffs.findOne _id: req.params.id, (error, result) ->
+    models.oneoffs.findOne _id: models.ObjectID(req.params.id), (error, result) ->
       return res.send 400, error if error
       res.json result
 

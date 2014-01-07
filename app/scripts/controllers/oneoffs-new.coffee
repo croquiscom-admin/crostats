@@ -1,7 +1,6 @@
 angular.module('CroStats')
   .controller 'OneoffsNewCtrl', ($scope, $http) ->
-    $scope.program =
-      type: 'shellscript'
+    $scope.program = {}
 
     $scope.runProgram = ->
       $scope.show_progress = true

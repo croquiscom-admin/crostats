@@ -1,0 +1,34 @@
+<form class='form-horizontal'>
+  <div class='form-group'>
+    <label class='col-sm-2 control-label'>Description</label>
+    <div class='col-sm-10'>
+      <textarea class='form-control' rows='2' readonly ng-model='oneoff.description'></textarea>
+    </div>
+  </div>
+  <div class='form-group'>
+    <label class='col-sm-2 control-label'>Server</label>
+    <div class='col-sm-10'>
+      <select disabled ng-model='oneoff.server' ng-options='s._id as s._id for s in servers'>
+        <option value=''>-- select server --</option>
+      </select>
+    </div>
+  </div>
+  <div class='form-group'>
+    <label class='col-sm-2 control-label'>Using CoffeeScript</label>
+    <div class='col-sm-10'>
+      <input type='checkbox' class='form-control' disabled ng-model='oneoff.using_coffeescript' ng-change='onChangeUsingCoffeeScript()'></textarea>
+    </div>
+  </div>
+  <div class='form-group'>
+    <label class='col-sm-2 control-label'>Script</label>
+    <div class='col-sm-10'>
+      <textarea class='form-control' rows='8' readonly ng-model='oneoff.script'></textarea>
+    </div>
+  </div>
+  <div class='form-group'>
+    <label class='col-sm-2 control-label'>Result</label>
+    <div class='col-sm-10'>
+      <textarea class='form-control' rows='8' readonly>{{oneoff.result}}</textarea>
+    </div>
+  </div>
+</form>

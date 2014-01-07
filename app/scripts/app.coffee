@@ -41,3 +41,8 @@ angular.module('CroStats', ['ui.router', 'jm.i18next', 'restangular'])
         templateUrl: 'views/oneoffs-history.html'
         controller: 'OneoffsHistoryCtrl'
       )
+      .state('oneoffs.item',
+        url: '/:id'
+        templateUrl: 'views/oneoffs-item.html'
+        controller: 'OneoffsItemCtrl'
+      )
