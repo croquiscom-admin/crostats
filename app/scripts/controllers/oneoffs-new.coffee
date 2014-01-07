@@ -1,5 +1,5 @@
 angular.module('CroStats')
-  .controller 'ProgramsOneoffCtrl', ($scope, $http) ->
+  .controller 'OneoffsNewCtrl', ($scope, $http) ->
     $scope.program =
       type: 'shellscript'
 
