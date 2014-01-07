@@ -1,5 +1,6 @@
 <div class='list-group'>
   <a class='list-group-item' ng-repeat='item in oneoffs' ui-sref='oneoffs.item({id:item._id})'>
-    <p class='list-group-item-text'>{{item.description}}</p>
+    <span class='badge'>{{item.date}}</span>
+    {{item.description}}
   </a>
 </div>

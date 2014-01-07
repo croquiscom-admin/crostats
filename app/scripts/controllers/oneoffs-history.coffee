@@ -4,6 +4,8 @@ angular.module('CroStats')
 
     $scope.oneoffs = []
     oneoffs.getList().then (oneoffs) ->
+      for item in oneoffs
+        item.date = new Date(item.date).toString()
       $scope.oneoffs = oneoffs
 
     $scope.$parent.selected = 'history'

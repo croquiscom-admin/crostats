@@ -2,7 +2,7 @@
   <div class='form-group'>
     <label class='col-sm-2 control-label'>Server</label>
     <div class='col-sm-10'>
-      <select ng-model='program.server' ng-options='s._id as s._id for s in servers'>
+      <select ng-model='oneoff.server' ng-options='s._id as s._id for s in servers'>
         <option value=''>-- select server --</option>
       </select>
     </div>
@@ -10,30 +10,30 @@
   <div class='form-group'>
     <label class='col-sm-2 control-label'>Using CoffeeScript</label>
     <div class='col-sm-10'>
-      <input type='checkbox' class='form-control' ng-model='program.using_coffeescript' ng-change='onChangeUsingCoffeeScript()'></textarea>
+      <input type='checkbox' class='form-control' ng-model='oneoff.using_coffeescript' ng-change='onChangeUsingCoffeeScript()'></textarea>
     </div>
   </div>
   <div class='form-group'>
     <label class='col-sm-2 control-label'>Script</label>
     <div class='col-sm-10'>
       <div class='program-beautify-script-container'>
-        <textarea class='form-control' rows='8' ng-model='program.script'></textarea>
-        <button ng-click='beautifyScript()' class='btn btn-warning program-beautify-script' ng-hide='program.using_coffeescript'>Beautify</button>
+        <textarea class='form-control' rows='8' ng-model='oneoff.script'></textarea>
+        <button ng-click='beautifyScript()' class='btn btn-warning program-beautify-script' ng-hide='oneoff.using_coffeescript'>Beautify</button>
       </div>
     </div>
   </div>
-  <button type='submit' class='btn btn-default' ng-click='runProgram()' ng-i18next='programs.edit.test'></button>
+  <button type='submit' class='btn btn-default' ng-click='runOneoff()' ng-i18next='programs.edit.test'></button>
   <div class='progress progress-striped active' ng-show='show_progress'>
     <div class='progress-bar' style='width: 100%;'></div>
   </div>
   <div ng-show='show_run_result'>
     <label ng-i18next='programs.edit.result'></label>
-    <textarea class='form-control' rows='8' readonly>{{program.result}}</textarea>
+    <textarea class='form-control' rows='8' readonly>{{oneoff.result}}</textarea>
     <hr>
     <div class='form-group'>
       <label class='col-sm-2 control-label'>Description</label>
       <div class='col-sm-10'>
-        <textarea class='form-control' rows='2' ng-model='program.description'></textarea>
+        <textarea class='form-control' rows='2' ng-model='oneoff.description'></textarea>
       </div>
     </div>
     <div class='form-group'>

@@ -70,6 +70,8 @@ module.exports = (app) ->
   app.get '/api/oneoffs', (req, res) ->
     models.oneoffs.find({}, {_id:1, description: 1}).sort(_id:-1).toArray (error, result) ->
       return res.send 400, error if error
+      for item in result
+        item.date = item._id.getTimestamp()
       res.json result
 
   app.post '/api/oneoffs', (req, res) ->
