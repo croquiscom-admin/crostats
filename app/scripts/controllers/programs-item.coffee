@@ -19,7 +19,7 @@ angular.module('CroStats')
     columns = []
     results.forEach (result) ->
       result.result.forEach (item) ->
-        columns.push item._id if columns.indexOf(item._id)<0
+        columns.push item.id if columns.indexOf(item.id)<0
     columns.sort (a, b) ->
       a = a.toLowerCase()
       b = b.toLowerCase()
@@ -30,7 +30,7 @@ angular.module('CroStats')
       result.result_for_table = columns.map (column) ->
         value = 'N/A'
         pos = result.result.forEach (item) ->
-          value = item.value if item._id is column
+          value = item.value if item.id is column
         return value
       result.result = result.result_for_table.map (value) -> if value is 'N/A' then 0 else value
       result.total = result.result.reduce ((previousValue, currentValue) -> previousValue + currentValue), 0
@@ -59,7 +59,7 @@ angular.module('CroStats')
       $scope.original = angular.copy $scope.program
 
       $scope.$parent.programs.forEach (program) ->
-        if program._id is $scope.program._id
+        if program.id is $scope.program.id
           program.title = $scope.program.title
           program.description = $scope.program.description
 

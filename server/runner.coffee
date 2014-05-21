@@ -6,6 +6,14 @@ temp.track()
 
 models = require './models'
 
+_removeIdUnderscore = (item) ->
+  if Array.isArray item
+    item.forEach _removeIdUnderscore
+  else
+    item.id = item._id
+    delete item._id
+  return
+
 class Runner
   start: ->
     setInterval @find.bind(@), 10 * 1000
@@ -96,6 +104,7 @@ class Runner
       return callback error if error
       db.collection(program.collection).mapReduce map, reduce, out: inline: 1, (error, results) ->
         return callback error.errmsg if error
+        _removeIdUnderscore results
         callback null, results
 
 module.exports = new Runner()

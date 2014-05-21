@@ -1,6 +1,14 @@
 models = require '../models'
 runner = require '../runner'
 
+_removeIdUnderscore = (item) ->
+  if Array.isArray item
+    item.forEach _removeIdUnderscore
+  else
+    item.id = item._id
+    delete item._id
+  return
+
 module.exports = (app) ->
   app.use (req, res, next) ->
     origin = req.get 'Origin'
@@ -16,15 +24,17 @@ module.exports = (app) ->
   app.get '/api/servers', (req, res) ->
     models.servers.find({}, {_id:1}).toArray (error, result) ->
       return res.send 400, error if error
+      _removeIdUnderscore result
       res.json result
 
   app.get '/api/programs', (req, res) ->
     models.programs.find({}, {_id:1, title: 1, description: 1}).toArray (error, result) ->
       return res.send 400, error if error
+      _removeIdUnderscore result
       res.json result
 
   app.post '/api/programs', (req, res) ->
-    id = req.body.id or req.body._id
+    id = req.body.id
     title = req.body.title or id
     description = req.body.description or id
     models.programs.insert _id: id, title: title, description: description, type: 'mapreduce', (error) ->
@@ -34,10 +44,11 @@ module.exports = (app) ->
   app.get '/api/programs/:id', (req, res) ->
     models.programs.findOne _id: req.params.id, (error, result) ->
       return res.send 400, error if error
+      _removeIdUnderscore result
       res.json result
 
   app.put '/api/programs/:id', (req, res) ->
-    delete req.body._id
+    delete req.body.id
 
     # reset last_run not to run this program when type is changed from none to daily
     req.body.runner ||= {}
@@ -57,6 +68,7 @@ module.exports = (app) ->
   app.get '/api/programs/:id/results', (req, res) ->
     models.results.find(program: req.params.id).toArray (error, result) ->
       return res.send 400, error if error
+      _removeIdUnderscore result
       res.json result
 
   app.post '/api/programs/:id/results', (req, res) ->
@@ -83,6 +95,7 @@ module.exports = (app) ->
       return res.send 400, error if error
       for item in result
         item.date = item._id.getTimestamp()
+      _removeIdUnderscore result
       res.json result
 
   app.post '/api/oneoffs', (req, res) ->
@@ -93,6 +106,7 @@ module.exports = (app) ->
   app.get '/api/oneoffs/:id', (req, res) ->
     models.oneoffs.findOne _id: models.ObjectID(req.params.id), (error, result) ->
       return res.send 400, error if error
+      _removeIdUnderscore result
       res.json result
 
   app.use (req, res) ->
