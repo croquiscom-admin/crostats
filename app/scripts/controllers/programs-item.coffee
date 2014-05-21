@@ -1,5 +1,5 @@
 angular.module('CroStats')
-  .controller 'ProgramsItemCtrl', ($scope, $http, $stateParams) ->
+  .controller 'ProgramsItemCtrl', (CONFIG, $scope, $http, $stateParams) ->
     $scope.types =
       shellscript: 'MongoDB shell script'
       mapreduce: 'Map-Reduce'
@@ -40,12 +40,12 @@ angular.module('CroStats')
       drawChart columns, results
 
     loadResults = ->
-      $http.get("/api/programs/#{$stateParams.id}/results").success (results) ->
+      $http.get("#{CONFIG.api_base_url}/programs/#{$stateParams.id}/results").success (results) ->
         setResults results
 
     $scope.runProgram = ->
       $scope.show_progress = true
-      $http.post("/api/runProgram", $scope.program).success (results) ->
+      $http.post("#{CONFIG.api_base_url}/runProgram", $scope.program).success (results) ->
         $scope.show_progress = false
         $scope.show_run_result = true
         $scope.run_result = results[0]
@@ -55,7 +55,7 @@ angular.module('CroStats')
         alert data
 
     $scope.updateProgram = ->
-      $http.put("/api/programs/#{$stateParams.id}", $scope.program).success ->
+      $http.put("#{CONFIG.api_base_url}/programs/#{$stateParams.id}", $scope.program).success ->
         $scope.original = angular.copy $scope.program
 
         $scope.$parent.programs.forEach (program) ->
@@ -70,7 +70,7 @@ angular.module('CroStats')
       angular.equals $scope.program, $scope.original
 
     $scope.recordTestResult = ->
-      $http.post("/api/programs/#{$stateParams.id}/results", $scope.run_result).success ->
+      $http.post("#{CONFIG.api_base_url}/programs/#{$stateParams.id}/results", $scope.run_result).success ->
         loadResults()
 
     $scope.$parent.selected = $stateParams.id
@@ -83,7 +83,7 @@ angular.module('CroStats')
     $scope.beautifyReduce = ->
       $scope.program.reduce = js_beautify $scope.program.reduce if $scope.program.reduce
 
-    $http.get("/api/programs/#{$stateParams.id}").success (program) ->
+    $http.get("#{CONFIG.api_base_url}/programs/#{$stateParams.id}").success (program) ->
       $scope.program = program
       $scope.original = angular.copy program
 

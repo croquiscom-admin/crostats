@@ -1,9 +1,7 @@
 angular.module('CroStats')
-  .controller 'OneoffsHistoryCtrl', ($scope, Restangular) ->
-    oneoffs = Restangular.all('oneoffs')
-
+  .controller 'OneoffsHistoryCtrl', (CONFIG, $scope) ->
     $scope.oneoffs = []
-    oneoffs.getList().then (oneoffs) ->
+    $http.get("#{CONFIG.api_base_url}/oneoffs").success (oneoffs) ->
       for item in oneoffs
         item.date = new Date(item.date).toString()
       $scope.oneoffs = oneoffs

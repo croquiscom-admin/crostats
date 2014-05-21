@@ -2,6 +2,17 @@ models = require '../models'
 runner = require '../runner'
 
 module.exports = (app) ->
+  app.use (req, res, next) ->
+    origin = req.get 'Origin'
+    if origin is 'http://localhost:9000' or origin is 'http://127.0.0.1:9000'
+      res.set 'Access-Control-Allow-Origin', origin
+      res.set 'Access-Control-Allow-Credentials', true
+      res.set 'Access-Control-Allow-Headers', 'X-Requested-With, Content-Type'
+      res.set 'Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'
+      if req.method is 'OPTIONS'
+        return res.json {}
+    next()
+
   app.get '/api/servers', (req, res) ->
     models.servers.find({}, {_id:1}).toArray (error, result) ->
       return res.send 400, error if error

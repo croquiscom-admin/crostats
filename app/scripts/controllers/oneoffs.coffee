@@ -1,4 +1,4 @@
 angular.module('CroStats')
-  .controller 'OneoffsCtrl', ($scope, $http, $state, Restangular) ->
-    $http.get('/api/servers').success (servers) ->
+  .controller 'OneoffsCtrl', (CONFIG, $scope, $http, $state) ->
+    $http.get("#{CONFIG.api_base_url}/servers").success (servers) ->
       $scope.servers = servers

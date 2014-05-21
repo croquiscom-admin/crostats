@@ -1,8 +1,5 @@
-angular.module('CroStats', ['ui.router', 'jm.i18next', 'restangular'])
-  .config ($stateProvider, $urlRouterProvider, $i18nextProvider, RestangularProvider) ->
-    RestangularProvider.setBaseUrl '/api'
-    RestangularProvider.setRestangularFields id: '_id'
-
+angular.module('CroStats', ['ui.router', 'jm.i18next'])
+  .config ($stateProvider, $urlRouterProvider, $i18nextProvider) ->
     $urlRouterProvider.otherwise '/programs'
 
     $i18nextProvider.options =

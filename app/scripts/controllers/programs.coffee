@@ -1,12 +1,10 @@
 angular.module('CroStats')
-  .controller 'ProgramsCtrl', ($scope, $http, $state, Restangular) ->
-    programs = Restangular.all('programs')
-
+  .controller 'ProgramsCtrl', (CONFIG, $scope, $http, $state) ->
     $scope.programs = []
-    programs.getList().then (programs) ->
+    $http.get("#{CONFIG.api_base_url}/programs").success (programs) ->
       $scope.programs = programs
 
-    $http.get('/api/servers').success (servers) ->
+    $http.get("#{CONFIG.api_base_url}/servers").success (servers) ->
       $scope.servers = servers
 
     $scope.getTitleOfProgram = (program_id) ->

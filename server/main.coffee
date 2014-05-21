@@ -1,16 +1,18 @@
 express = require 'express'
+http = require 'http'
+
 app = express()
+server = http.createServer app
+
+app.use express.logger()
 
 app.use express.bodyParser()
 
-if require.main is module
-  app.use express.static __dirname + '/../dist/'
+app.use express.static __dirname + '/../dist/'
 
 require('./routes')(app)
 
 require('./runner').start()
 
-if require.main is module
-  app.listen 7293
-else
-  module.exports = app
+server.listen 7293, ->
+  console.log "[#{Date.now()}] [server] Started"
