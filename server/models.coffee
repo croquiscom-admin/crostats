@@ -1,6 +1,6 @@
 mongodb = require 'mongodb'
 server = new mongodb.Server 'localhost', 27017, {}
-db = new mongodb.Db 'statistics', server, safe: true
+db = new mongodb.Db 'crostats', server, safe: true
 db.open ->
 
 servers = new mongodb.Collection db, 'servers'
