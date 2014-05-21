@@ -1,5 +1,5 @@
 angular.module('CroStats')
-.controller 'OneoffsHistoryCtrl', (CONFIG, $scope) ->
+.controller 'OneoffsHistoryCtrl', (CONFIG, $scope, $http) ->
   $scope.oneoffs = []
   $http.get("#{CONFIG.api_base_url}/oneoffs").success (oneoffs) ->
     for item in oneoffs
