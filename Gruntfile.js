@@ -355,9 +355,11 @@ module.exports = function (grunt) {
     },
 
     forever: {
-      options: {
-        index: 'server/main.coffee',
-        command: './node_modules/.bin/coffee'
+      server: {
+        options: {
+          index: 'server/main.coffee',
+          command: './node_modules/.bin/coffee'
+        }
       }
     }
   });
@@ -402,10 +404,10 @@ module.exports = function (grunt) {
 
   grunt.registerTask('start', [
     'build',
-    'forever:start'
+    'forever:server:start'
   ]);
 
   grunt.registerTask('stop', [
-    'forever:stop'
+    'forever:server:stop'
   ]);
 };
