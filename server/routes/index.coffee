@@ -47,7 +47,7 @@ module.exports = (app) ->
       return res.send 400, error if error
       res.json {}
 
-  app.del '/api/programs/:id', (req, res) ->
+  app.delete '/api/programs/:id', (req, res) ->
     models.results.remove {program: req.params.id}, safe: true, (error) ->
       return res.send 400, error if error
       models.programs.remove {_id: req.params.id}, safe: true, (error) ->

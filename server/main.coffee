@@ -4,10 +4,8 @@ http = require 'http'
 app = express()
 server = http.createServer app
 
-app.use express.logger()
-
-app.use express.bodyParser()
-
+app.use require('morgan')()
+app.use require('body-parser')()
 app.use express.static __dirname + '/../dist/'
 
 require('./routes')(app)
