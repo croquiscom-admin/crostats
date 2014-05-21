@@ -52,6 +52,13 @@ module.exports = function (grunt) {
           '.tmp/scripts/{,*/}*.js',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
+      },
+      express: {
+        files: ['server/**/*.coffee'],
+        tasks: ['express'],
+        options: {
+          spawn: false
+        }
       }
     },
 
