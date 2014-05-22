@@ -11,7 +11,7 @@ from <input type='text' id='results_to' data-date-format='YYYY-MM-DD HH:mm'/>
         <th ng-show='program.show_total' ng-i18next='programs.result.total'></th>
       </tr>
       <tr ng-repeat='item in results'>
-        <td>{{item.date}}</td>
+        <td>{{item.date | date:'yyyy-MM-dd HH:mm Z'}}</td>
         <td ng-repeat='value in item.result_for_table track by $index'>{{value}}</td>
         <td ng-show='program.show_total'>{{item.total}}</td>
       </tr>
