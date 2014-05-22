@@ -2,8 +2,10 @@
   "name": "CroStats",
   "version": "0.0.0",
   "dependencies": {
+    "basic-auth-connect": "~1.0.0",
     "body-parser": "~1.2.0",
     "coffee-script": "~1.7.1",
+    "config": "~0.4.35",
     "express": "~4.2.0",
     "grunt": "~0.4.5",
     "grunt-autoprefixer": "~0.7.3",
