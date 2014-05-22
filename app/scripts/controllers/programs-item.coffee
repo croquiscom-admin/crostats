@@ -1,5 +1,12 @@
 angular.module('CroStats')
 .controller 'ProgramsItemCtrl', (CONFIG, $scope, $http, $stateParams) ->
+  results_to = new Date()
+  $scope.results_types =
+    days_07: 'Recent 7 days'
+    days_30: 'Recent 30 days'
+    items_10: 'Recent 10 items'
+  $scope.results_type = 'items_10'
+
   $scope.types =
     shellscript: 'MongoDB shell script'
     mapreduce: 'Map-Reduce'
@@ -40,7 +47,13 @@ angular.module('CroStats')
     drawChart columns, results
 
   loadResults = ->
-    $http.get("#{CONFIG.api_base_url}/programs/#{$stateParams.id}/results").success (results) ->
+    to = results_to.getTime()
+    query = 'to=' + to
+    query += switch $scope.results_type
+      when 'days_07' then '&from=' + (to-7*24*60*60*1000)
+      when 'days_30' then '&from=' + (to-30*24*60*60*1000)
+      when 'items_10' then '&limit=10'
+    $http.get("#{CONFIG.api_base_url}/programs/#{$stateParams.id}/results?#{query}").success (results) ->
       setResults results
 
   $scope.runProgram = ->
@@ -74,7 +87,6 @@ angular.module('CroStats')
       loadResults()
 
   $scope.$parent.selected = $stateParams.id
-  loadResults()
 
   $scope.beautifyScript = ->
     $scope.program.script = js_beautify $scope.program.script if $scope.program.script
@@ -84,10 +96,21 @@ angular.module('CroStats')
     $scope.program.reduce = js_beautify $scope.program.reduce if $scope.program.reduce
 
   $http.get("#{CONFIG.api_base_url}/programs/#{$stateParams.id}").success (program) ->
+    if program.runner.type is 'daily'
+      $scope.results_type = 'days_07'
     $scope.program = program
     $scope.original = angular.copy program
+    loadResults()
 
   $scope.onChangeUsingCoffeeScript = ->
     $scope.program.script = ''
     $scope.program.map = ''
     $scope.program.reduce = ''
+
+  $scope.$watch 'results_type', ->
+    loadResults()
+
+  $('#results_to').datetimepicker defaultDate: results_to
+  $('#results_to').on 'dp.change', (event) ->
+    results_to = event.date._d
+    loadResults()

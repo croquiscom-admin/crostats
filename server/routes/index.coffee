@@ -66,9 +66,16 @@ module.exports = (app) ->
         res.json {}
 
   app.get '/api/programs/:id/results', (req, res) ->
-    models.results.find(program: req.params.id).toArray (error, result) ->
+    criteria = [ { program: req.params.id } ]
+    if req.query.from
+      criteria.push date: $gte: new Date(Number req.query.from)
+    if req.query.to
+      criteria.push date: $lt: new Date(Number req.query.to)
+    limit = Number(req.query.limit or 0)
+    models.results.find($and: criteria).sort(date:-1).limit(limit).toArray (error, result) ->
       return res.send 400, error if error
       _removeIdUnderscore result
+      result.reverse()
       res.json result
 
   app.post '/api/programs/:id/results', (req, res) ->
