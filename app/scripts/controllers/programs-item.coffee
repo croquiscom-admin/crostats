@@ -96,7 +96,7 @@ angular.module('CroStats')
     $scope.program.reduce = js_beautify $scope.program.reduce if $scope.program.reduce
 
   $http.get("#{CONFIG.api_base_url}/programs/#{$stateParams.id}").success (program) ->
-    if program.runner.type is 'daily'
+    if program.runner?.type is 'daily'
       $scope.results_type = 'days_07'
     $scope.program = program
     $scope.original = angular.copy program
