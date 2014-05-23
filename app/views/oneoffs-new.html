@@ -10,14 +10,14 @@
   <div class='form-group'>
     <label class='col-sm-2 control-label'>Using CoffeeScript</label>
     <div class='col-sm-10'>
-      <input type='checkbox' ng-model='oneoff.using_coffeescript' ng-change='onChangeUsingCoffeeScript()'></textarea>
+      <input type='checkbox' ng-model='oneoff.using_coffeescript' ng-change='onChangeUsingCoffeeScript()'></input>
     </div>
   </div>
   <div class='form-group'>
     <label class='col-sm-2 control-label'>Script</label>
     <div class='col-sm-10'>
       <div class='program-beautify-script-container'>
-        <textarea class='form-control' rows='8' ng-model='oneoff.script'></textarea>
+        <div ui-ace="{ onLoad : aceLoaded }" class='form-control code-editor' ng-model='oneoff.script'></div>
         <button ng-click='beautifyScript()' class='btn btn-warning program-beautify-script' ng-hide='oneoff.using_coffeescript'>Beautify</button>
       </div>
     </div>

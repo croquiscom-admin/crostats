@@ -78,7 +78,7 @@ from <input type='text' id='results_to' data-date-format='YYYY-MM-DD HH:mm'/>
               <label class='col-sm-2 control-label'>Script</label>
               <div class='col-sm-10'>
                 <div class='program-beautify-script-container'>
-                  <textarea class='form-control' rows='8' ng-model='program.script'></textarea>
+                  <div ui-ace="{ onLoad : aceLoaded }" class='form-control code-editor' ng-model='program.script'></div>
                   <button ng-click='beautifyScript()' class='btn btn-warning program-beautify-script' ng-hide='program.using_coffeescript'>Beautify</button>
                 </div>
               </div>
@@ -91,14 +91,14 @@ from <input type='text' id='results_to' data-date-format='YYYY-MM-DD HH:mm'/>
               <label class='col-sm-2 control-label'>Map function</label>
               <div class='col-sm-10'>
                 <div class='program-beautify-script-container'>
-                  <textarea class='form-control' rows='8' ng-model='program.map'></textarea>
+                  <div ui-ace="{ onLoad : aceLoaded }" class='form-control code-editor' ng-model='program.map'></div>
                   <button ng-click='beautifyMap()' class='btn btn-warning program-beautify-script' ng-hide='program.using_coffeescript'>Beautify</button>
                 </div>
               </div>
               <label class='col-sm-2 control-label'>Reduce function</label>
               <div class='col-sm-10'>
                 <div class='program-beautify-script-container'>
-                  <textarea class='form-control' rows='8' ng-model='program.reduce'></textarea>
+                  <div ui-ace="{ onLoad : aceLoaded }" class='form-control code-editor' ng-model='program.reduce'></div>
                   <button ng-click='beautifyReduce()' class='btn btn-warning program-beautify-script' ng-hide='program.using_coffeescript'>Beautify</button>
                 </div>
               </div>

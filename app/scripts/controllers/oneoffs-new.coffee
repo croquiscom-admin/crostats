@@ -18,3 +18,19 @@ angular.module('CroStats')
     $http.post("#{CONFIG.api_base_url}/oneoffs", $scope.oneoff).success ->
 
   $scope.$parent.selected = 'new'
+
+  $scope.onChangeUsingCoffeeScript = ->
+    $scope.oneoff.script = ''
+    _updateEditors()
+
+  _code_editors = []
+  _updateEditors = ->
+    _code_editors.forEach (editor) ->
+      if $scope.oneoff?.using_coffeescript
+        editor.getSession().setMode 'ace/mode/coffee'
+      else
+        editor.getSession().setMode 'ace/mode/javascript'
+
+  $scope.aceLoaded = (editor) ->
+    _code_editors.push editor
+    _updateEditors()

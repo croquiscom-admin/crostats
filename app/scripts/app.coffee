@@ -1,4 +1,4 @@
-angular.module('CroStats', ['ui.router', 'jm.i18next'])
+angular.module('CroStats', ['ui.router', 'jm.i18next', 'ui.ace'])
 .config ($stateProvider, $urlRouterProvider, $i18nextProvider) ->
   $urlRouterProvider.otherwise '/programs'
 

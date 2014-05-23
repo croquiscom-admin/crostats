@@ -78,6 +78,7 @@ angular.module('CroStats')
 
   $scope.resetProgram = ->
     $scope.program = angular.copy $scope.original
+    _updateEditors()
 
   $scope.isClean = ->
     angular.equals $scope.program, $scope.original
@@ -101,11 +102,13 @@ angular.module('CroStats')
     $scope.program = program
     $scope.original = angular.copy program
     loadResults()
+    _updateEditors()
 
   $scope.onChangeUsingCoffeeScript = ->
     $scope.program.script = ''
     $scope.program.map = ''
     $scope.program.reduce = ''
+    _updateEditors()
 
   $scope.$watch 'results_type', ->
     loadResults()
@@ -114,3 +117,15 @@ angular.module('CroStats')
   $('#results_to').on 'dp.change', (event) ->
     results_to = event.date._d
     loadResults()
+
+  _code_editors = []
+  _updateEditors = ->
+    _code_editors.forEach (editor) ->
+      if $scope.program.using_coffeescript
+        editor.getSession().setMode 'ace/mode/coffee'
+      else
+        editor.getSession().setMode 'ace/mode/javascript'
+
+  $scope.aceLoaded = (editor) ->
+    _code_editors.push editor
+    _updateEditors()
