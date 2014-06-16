@@ -98,21 +98,21 @@ module.exports = (app) ->
       res.send 400, error
 
   app.get '/api/oneoffs', (req, res) ->
-    models.OneOff.getList()
+    models.Oneoff.getList()
     .then (result) ->
       res.json result
     .catch (error) ->
       res.send 400, error
 
   app.post '/api/oneoffs', (req, res) ->
-    models.OneOff.add req.body
+    models.Oneoff.add req.body
     .then ->
       res.json {}
     .catch (error) ->
       res.send 400, error
 
   app.get '/api/oneoffs/:id', (req, res) ->
-    models.OneOff.get req.params.id
+    models.Oneoff.get req.params.id
     .then (result) ->
       res.json result
     .catch (error) ->

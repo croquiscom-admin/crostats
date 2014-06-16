@@ -113,7 +113,7 @@ class Result
         return reject error if error
         resolve()
 
-class OneOff
+class Oneoff
   @getList: ->
     new Promise (resolve, reject) ->
       oneoffs.find({}, {_id:1, description: 1}).sort(_id:-1).toArray (error, result) ->
@@ -141,4 +141,4 @@ module.exports =
   Server: Server
   Program: Program
   Result: Result
-  OneOff: OneOff
+  Oneoff: Oneoff
