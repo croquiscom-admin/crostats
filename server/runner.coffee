@@ -1,6 +1,7 @@
 coffee = require 'coffee-script'
 {exec} = require 'child_process'
 fs = require 'fs'
+Promise = require 'bluebird'
 temp = require 'temp'
 temp.track()
 
@@ -16,7 +17,14 @@ _removeIdUnderscore = (item) ->
 
 class Runner
   start: ->
-    setInterval @find.bind(@), 10 * 1000
+    setInterval =>
+      @find()
+      .then (programs) =>
+        promises = programs.map (program) => @runAndUpdate program._id
+        Promise.all promises
+      , (error) ->
+        console.log 'Error while Runner.find : ' + error if error
+    , 10 * 1000
     @
 
   find: ->
@@ -33,63 +41,83 @@ class Runner
           today.setMilliseconds(0)
           return true if last_run.getTime() < today.getTime()
       return false
-    models.programs.find($where: where.toString(), {_id: 1}).toArray (error, programs) =>
-      return console.log 'Error while Runner.find : ' + error if error
-      programs.forEach (program) => @runAndUpdate program._id
+    new Promise (resolve, reject) ->
+      models.programs.find($where: where.toString(), {_id: 1}).toArray (error, programs) =>
+        return reject error if error
+        resolve programs
 
   runAndUpdate: (program_id) ->
     date = new Date()
     console.log "Run program '#{program_id}' at #{date.toString()}..."
-    models.programs.update {_id: program_id}, {$set: 'runner.last_run': date}, safe: true, (error, count) =>
-      return if error
-      @run program_id, (error, results) ->
-        return if error
+    new Promise (resolve, reject) ->
+      models.programs.update {_id: program_id}, {$set: 'runner.last_run': date}, safe: true, (error, count) =>
+        return reject error if error
+        resolve()
+    .then =>
+      @run program_id
+    .then (results) ->
+      new Promise (resolve, reject) ->
         models.results.insert { program: program_id, result: results, date: date }, safe: true, (error, result) ->
+          return reject error if error
+          resolve()
+    .then ->
+      console.log "Run program '#{program_id}' Done"
+    .catch (error) ->
+      console.log "Run program '#{program_id}' Failed: #{error.toString()}"
 
-  run: (program_id, callback) ->
-    models.programs.findOne _id: program_id, (error, program) =>
-      return callback error if error
-      @runProgram program, callback
+  run: (program_id) ->
+    new Promise (resolve, reject) ->
+      models.programs.findOne _id: program_id, (error, program) ->
+        return reject error if error
+        resolve program
+    .then (program) =>
+      @runProgram program
 
-  runProgram: (program, callback) ->
-    if not callback
-      callback = ->
-    models.servers.findOne _id: program.server, (error, server) =>
-      return callback error if error
-      return callback 'no server' if not server
+  runProgram: (program) ->
+    new Promise (resolve, reject) ->
+      models.servers.findOne _id: program.server, (error, server) =>
+        return reject error if error
+        return reject 'no server' if not server
+        resolve server
+    .then (server) =>
       switch program.type
         when 'shellscript'
-          @runScript server, program, callback
+          @runScript server, program
         when 'mapreduce'
-          @runMapReduce server, program, callback
+          @runMapReduce server, program
         else
-          callback 'No program'
+          Promise.reject 'No program'
 
-  runScript: (server, program, callback) ->
-    temp.open 'mongoscript', (error, info) ->
-      return callback error if error
-
+  runScript: (server, program) ->
+    new Promise (resolve, reject) ->
+      temp.open 'mongoscript', (error, info) ->
+        return reject error if error
+        resolve info
+    .then (info) ->
       script = program.script
       if program.using_coffeescript
         script = coffee.compile script, filename: 'crostats', bare: true
 
-      fs.write info.fd, script
-      fs.close info.fd, (error) ->
-        return callback error if error
-
+      new Promise (resolve, reject) ->
+        fs.write info.fd, script
+        fs.close info.fd, (error) ->
+          return reject error if error
+          resolve()
+      .then ->
         cmd = 'mongo --quiet '
         if server.user and server.password
           cmd += "-u #{server.user} -p #{server.password} "
         cmd += server.url
         cmd += ' ' + info.path
 
-        exec cmd, (error, stdout, stderr) ->
-          result = stdout.toString()
-          return callback result if error
-          try result = JSON.parse result
-          callback null, result
+        new Promise (resolve, reject) ->
+          exec cmd, (error, stdout, stderr) ->
+            result = stdout.toString()
+            return reject result if error
+            try result = JSON.parse result
+            resolve result
 
-  runMapReduce: (server, program, callback) ->
+  runMapReduce: (server, program) ->
     map = program.map
     reduce = program.reduce
     if program.using_coffeescript
@@ -100,11 +128,12 @@ class Runner
 
     url = server.url
     url = "#{server.user}:#{server.password}@#{url}" if server.user and server.password
-    models.mongodb.MongoClient.connect "mongodb://#{url}", (error, db) ->
-      return callback error if error
-      db.collection(program.collection).mapReduce map, reduce, out: inline: 1, (error, results) ->
-        return callback error.errmsg if error
-        _removeIdUnderscore results
-        callback null, results
+    new Promise (resolve, reject) ->
+      models.mongodb.MongoClient.connect "mongodb://#{url}", (error, db) ->
+        return reject error if error
+        db.collection(program.collection).mapReduce map, reduce, out: inline: 1, (error, results) ->
+          return reject error.errmsg if error
+          _removeIdUnderscore results
+          resolve results
 
 module.exports = new Runner()

@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "dependencies": {
     "basic-auth-connect": "~1.0.0",
+    "bluebird": "~2.1.2",
     "body-parser": "~1.2.0",
     "coffee-script": "~1.7.1",
     "config": "~0.4.35",

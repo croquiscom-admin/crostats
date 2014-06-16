@@ -88,14 +88,18 @@ module.exports = (app) ->
       res.json {}
 
   app.post '/api/programs/:id/run', (req, res) ->
-    runner.run req.params.id, (error, results) ->
-      return res.send 400, error if error
+    runner.run req.params.id
+    .then (results) ->
       res.json [date: new Date(), result: results]
+    .catch (error) ->
+      res.send 400, error
 
   app.post '/api/runProgram', (req, res) ->
-    runner.runProgram req.body, (error, results) ->
-      return res.send 400, error if error
+    runner.runProgram req.body
+    .then (results) ->
       res.json [date: new Date(), result: results]
+    .catch (error) ->
+      res.send 400, error
 
   app.get '/api/oneoffs', (req, res) ->
     models.oneoffs.find({}, {_id:1, description: 1}).sort(_id:-1).toArray (error, result) ->
