@@ -18,7 +18,7 @@ _removeIdUnderscore = (item) ->
 class Runner
   start: ->
     setInterval =>
-      @find()
+      models.Program.findNeedRun()
       .then (programs) =>
         promises = programs.map (program) => @runAndUpdate program._id
         Promise.all promises
@@ -27,58 +27,26 @@ class Runner
     , 10 * 1000
     @
 
-  find: ->
-    where = ->
-      runner = @runner
-      if runner
-        if runner.type is 'daily'
-          last_run = runner.last_run
-          return true if not last_run
-          today = new Date()
-          today.setHours(0)
-          today.setMinutes(0)
-          today.setSeconds(0)
-          today.setMilliseconds(0)
-          return true if last_run.getTime() < today.getTime()
-      return false
-    new Promise (resolve, reject) ->
-      models.programs.find($where: where.toString(), {_id: 1}).toArray (error, programs) =>
-        return reject error if error
-        resolve programs
-
   runAndUpdate: (program_id) ->
     date = new Date()
     console.log "Run program '#{program_id}' at #{date.toString()}..."
-    new Promise (resolve, reject) ->
-      models.programs.update {_id: program_id}, {$set: 'runner.last_run': date}, safe: true, (error, count) =>
-        return reject error if error
-        resolve()
+    models.Program.update program_id, 'runner.last_run': date
     .then =>
       @run program_id
     .then (results) ->
-      new Promise (resolve, reject) ->
-        models.results.insert { program: program_id, result: results, date: date }, safe: true, (error, result) ->
-          return reject error if error
-          resolve()
+      models.Result.add program_id, date, results
     .then ->
       console.log "Run program '#{program_id}' Done"
     .catch (error) ->
       console.log "Run program '#{program_id}' Failed: #{error.toString()}"
 
   run: (program_id) ->
-    new Promise (resolve, reject) ->
-      models.programs.findOne _id: program_id, (error, program) ->
-        return reject error if error
-        resolve program
+    models.Program.get program_id
     .then (program) =>
       @runProgram program
 
   runProgram: (program) ->
-    new Promise (resolve, reject) ->
-      models.servers.findOne _id: program.server, (error, server) =>
-        return reject error if error
-        return reject 'no server' if not server
-        resolve server
+    models.Server.get program.server
     .then (server) =>
       switch program.type
         when 'shellscript'
