@@ -1,16 +1,20 @@
+config = require 'config'
 coffee = require 'coffee-script'
 {exec} = require 'child_process'
 fs = require 'fs'
 Promise = require 'bluebird'
+nodemailer = require 'nodemailer'
 temp = require 'temp'
 temp.track()
 
 models = require './models'
 
+transport = nodemailer.createTransport config.method, config.transport
+
 _removeIdUnderscore = (item) ->
   if Array.isArray item
     item.forEach _removeIdUnderscore
-  else
+  else if item._id and not item.id
     item.id = item._id
     delete item._id
   return
@@ -22,10 +26,28 @@ class Runner
       .then (programs) =>
         promises = programs.map (program) => @runAndUpdate program._id
         Promise.all promises
-      , (error) ->
-        console.log 'Error while Runner.find : ' + error if error
+      .then (results) =>
+        @sendEmail results
     , 10 * 1000
     @
+
+  sendEmail: (results) ->
+    if not (config.message?.from and config.message?.to)
+      return
+    results = results.filter (result) ->
+      result.program? and result.result?
+    if results.length is 0
+      return
+    results = results.map (result) ->
+      items = result.result.map (item) -> "#{item.id} : #{item.value}"
+      text = "@@ #{result.program.title} @@\n\n#{items.join('\n')}"
+    text = results.join '\n\n--------------------------------------------------\n\n'
+    options =
+      from: config.message.from
+      to: config.message.to
+      subject: 'CroStats'
+      text: text
+    transport.sendMail options
 
   runAndUpdate: (program_id) ->
     date = new Date()
@@ -33,10 +55,11 @@ class Runner
     models.Program.update program_id, 'runner.last_run': date
     .then =>
       @run program_id
-    .then (results) ->
-      models.Result.add program_id, date, results
-    .then ->
-      console.log "Run program '#{program_id}' Done"
+    .then (result) ->
+      models.Result.add program_id, date, result
+      .then ->
+        console.log "Run program '#{program_id}' Done"
+        Promise.resolve result
     .catch (error) ->
       console.log "Run program '#{program_id}' Failed: #{error.toString()}"
 
@@ -44,6 +67,8 @@ class Runner
     models.Program.get program_id
     .then (program) =>
       @runProgram program
+      .then (result) ->
+        Promise.resolve program: program, result: result
 
   runProgram: (program) ->
     models.Server.get program.server
@@ -83,6 +108,7 @@ class Runner
             result = stdout.toString()
             return reject result if error
             try result = JSON.parse result
+            _removeIdUnderscore result
             resolve result
 
   runMapReduce: (server, program) ->

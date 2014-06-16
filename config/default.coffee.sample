@@ -2,3 +2,11 @@ module.exports =
   basicAuth:
     username: 'admin'
     password: 'password'
+  email:
+    method: SES
+    transport:
+      AWSAccessKeyID: ''
+      AWSSecretKey: ''
+    message:
+      from: ''
+      to: ''
