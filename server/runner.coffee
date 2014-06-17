@@ -9,7 +9,7 @@ temp.track()
 
 models = require './models'
 
-transport = nodemailer.createTransport config.method, config.transport
+transport = nodemailer.createTransport config.email.method, config.email.transport
 
 _removeIdUnderscore = (item) ->
   if Array.isArray item
@@ -32,7 +32,7 @@ class Runner
     @
 
   sendEmail: (results) ->
-    if not (config.message?.from and config.message?.to)
+    if not (config.email.message?.from and config.email.message?.to)
       return
     results = results.filter (result) ->
       result.program? and result.result?
@@ -43,8 +43,8 @@ class Runner
       text = "@@ #{result.program.title} @@\n\n#{items.join('\n')}"
     text = results.join '\n\n--------------------------------------------------\n\n'
     options =
-      from: config.message.from
-      to: config.message.to
+      from: config.email.message.from
+      to: config.email.message.to
       subject: 'CroStats'
       text: text
     transport.sendMail options
