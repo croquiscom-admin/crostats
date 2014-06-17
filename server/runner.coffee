@@ -56,7 +56,7 @@ class Runner
     .then =>
       @run program_id
     .then (result) ->
-      models.Result.add program_id, date, result
+      models.Result.add program_id, date, result.result
       .then ->
         console.log "Run program '#{program_id}' Done"
         Promise.resolve result
