@@ -46,12 +46,22 @@ class Runner
         return 1
       return 0
     results = results.map (result) ->
-      items = result.result.map (item) -> "#{item.id} : #{item.value}"
+      items = result.result.map (item) ->
+        if result.last
+          for last_item in result.last
+            if last_item.id is item.id
+              diff = item.value - last_item.value
+              if diff > 0
+                diff = '+' + diff
+              else if diff is 0
+                diff = '='
+              return "#{item.id} : #{item.value} (#{diff})"
+        "#{item.id} : #{item.value}"
       text = "@@ #{result.program.title} @@\n\n#{items.join('\n')}"
     return results.join '\n\n--------------------------------------------------\n\n'
 
   sendEmail: (message) ->
-    if not (config.email.message?.from and config.email.message?.to)
+    if not (config.email?.message?.from and config.email?.message?.to)
       return
     options =
       from: config.email.message.from
@@ -67,10 +77,14 @@ class Runner
     .then =>
       @run program_id
     .then (result) ->
-      models.Result.add program_id, date, result.result
-      .then ->
-        console.log "Run program '#{program_id}' Done"
-        Promise.resolve result
+      models.Result.getList program_id, limit: 1
+      .then (last) ->
+        if last.length > 0
+          result.last = last[0].result
+        models.Result.add program_id, date, result.result
+        .then ->
+          console.log "Run program '#{program_id}' Done"
+          Promise.resolve result
     .catch (error) ->
       console.log "Run program '#{program_id}' Failed: #{error.toString()}"
 
