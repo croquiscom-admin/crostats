@@ -9,7 +9,8 @@ temp.track()
 
 models = require './models'
 
-transport = nodemailer.createTransport config.email.method, config.email.transport
+if config.email
+  transport = nodemailer.createTransport config.email.method, config.email.transport
 
 _removeIdUnderscore = (item) ->
   if Array.isArray item
@@ -23,30 +24,40 @@ class Runner
   start: ->
     setInterval =>
       models.Program.findNeedRun()
-      .then (programs) =>
-        promises = programs.map (program) => @runAndUpdate program._id
-        Promise.all promises
+      .map (program) =>
+        @runAndUpdate program._id
       .then (results) =>
-        @sendEmail results
+        @buildMessage results
+      .then (message) =>
+        if message
+          @sendEmail message
     , 10 * 1000
     @
 
-  sendEmail: (results) ->
-    if not (config.email.message?.from and config.email.message?.to)
-      return
+  buildMessage: (results) ->
     results = results.filter (result) ->
       result.program? and result.result?
     if results.length is 0
       return
+    results.sort (a, b) ->
+      if a.program.title < b.program.title
+        return -1
+      if a.program.title > b.program.title
+        return 1
+      return 0
     results = results.map (result) ->
       items = result.result.map (item) -> "#{item.id} : #{item.value}"
       text = "@@ #{result.program.title} @@\n\n#{items.join('\n')}"
-    text = results.join '\n\n--------------------------------------------------\n\n'
+    return results.join '\n\n--------------------------------------------------\n\n'
+
+  sendEmail: (message) ->
+    if not (config.email.message?.from and config.email.message?.to)
+      return
     options =
       from: config.email.message.from
       to: config.email.message.to
       subject: 'CroStats'
-      text: text
+      text: message
     transport.sendMail options
 
   runAndUpdate: (program_id) ->
