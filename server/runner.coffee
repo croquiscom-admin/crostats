@@ -2,8 +2,9 @@ config = require 'config'
 coffee = require 'coffee-script'
 {exec} = require 'child_process'
 fs = require 'fs'
-Promise = require 'bluebird'
 nodemailer = require 'nodemailer'
+Promise = require 'bluebird'
+request = require 'superagent'
 temp = require 'temp'
 temp.track()
 
@@ -27,25 +28,26 @@ class Runner
       .map (program) =>
         @runAndUpdate program._id
       .then (results) =>
-        @buildMessage results
-      .then (message) =>
-        if message
-          @sendEmail message
+        @refineResults results
+      .then (results) =>
+        if results.length > 0
+          @sendSlack results
+          @sendEmail results
     , 10 * 1000
     @
 
-  buildMessage: (results) ->
+  refineResults: (results) ->
     results = results.filter (result) ->
       result.program? and result.result?
     if results.length is 0
-      return
+      return []
     results.sort (a, b) ->
       if a.program.title < b.program.title
         return -1
       if a.program.title > b.program.title
         return 1
       return 0
-    results = results.map (result) ->
+    return results.map (result) ->
       items = result.result.map (item) ->
         if result.last
           for last_item in result.last
@@ -57,12 +59,21 @@ class Runner
                 diff = '='
               return "#{item.id} : #{item.value} (#{diff})"
         "#{item.id} : #{item.value}"
-      text = "@@ #{result.program.title} @@\n\n#{items.join('\n')}"
-    return results.join '\n\n--------------------------------------------------\n\n'
+      title: result.program.title, result: items.join('\n')
 
-  sendEmail: (message) ->
+  sendSlack: (results) ->
+    if not (config.slack?.hubothook and config.slack?.room)
+      return
+    fields = results.map (result) -> title: result.title, value: result.result, short: false
+    request.post config.slack.hubothook
+    .send room: config.slack.room, fallback: 'CroStats', pretext: 'CroStats', color: config.slack.color, fields: fields
+    .end (error, res) ->
+
+  sendEmail: (results) ->
     if not (config.email?.message?.from and config.email?.message?.to)
       return
+    message = results.map (result) -> "@@ #{result.title} @@\n\n#{result.result}"
+    .join '\n\n--------------------------------------------------\n\n'
     options =
       from: config.email.message.from
       to: config.email.message.to

@@ -10,3 +10,7 @@ module.exports =
     message:
       from: ''
       to: ''
+  slack:
+    hubothook: ''
+    room: ''
+    color: ''

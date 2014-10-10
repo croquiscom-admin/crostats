@@ -37,6 +37,7 @@
     "mongodb": "~1.4.4",
     "morgan": "~1.1.1",
     "nodemailer": "~0.6.5",
+    "superagent": "~0.20.0",
     "temp": "~0.7.0",
     "time-grunt": "~0.3.1"
   },
