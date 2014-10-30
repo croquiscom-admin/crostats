@@ -4,6 +4,9 @@ angular.module('CroStats')
   $scope.results_types =
     days_07: 'Recent 7 days'
     days_30: 'Recent 30 days'
+    days_90: 'Recent 90 days'
+    days_180: 'Recent 180 days'
+    days_360: 'Recent 360 days'
     items_10: 'Recent 10 items'
   $scope.results_type = 'items_10'
 
@@ -49,10 +52,10 @@ angular.module('CroStats')
   loadResults = ->
     to = results_to.getTime()
     query = 'to=' + to
-    query += switch $scope.results_type
-      when 'days_07' then '&from=' + (to-7*24*60*60*1000)
-      when 'days_30' then '&from=' + (to-30*24*60*60*1000)
-      when 'items_10' then '&limit=10'
+    if $scope.results_type.substr(0, 5) is 'days_'
+      query += '&from=' + (to-parseInt($scope.results_type.substr(5))*24*60*60*1000)
+    if $scope.results_type.substr(0, 6) is 'items_'
+      query += '&limit=' + $scope.results_type.substr(6)
     $http.get("#{CONFIG.api_base_url}/programs/#{$stateParams.id}/results?#{query}").success (results) ->
       setResults results
 
