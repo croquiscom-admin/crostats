@@ -38,7 +38,7 @@ class Runner
 
   refineResults: (results) ->
     results = results.filter (result) ->
-      result.program? and result.result?
+      result? and result.program? and result.result?
     if results.length is 0
       return []
     results.sort (a, b) ->
